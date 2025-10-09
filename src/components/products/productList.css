@@ -1,0 +1,9 @@
+/** @format */
+
+.product-list {
+	display: flex;
+	justify-content: space-around;
+	flex-wrap: wrap;
+	list-style: none;
+	padding: 0;
+}
