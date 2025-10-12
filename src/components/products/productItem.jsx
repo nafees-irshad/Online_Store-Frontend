@@ -4,10 +4,11 @@ import React, { useState } from 'react';
 import { FaHeart, FaShoppingCart } from 'react-icons/fa';
 import { useAuth } from '../Auth/AuthContext';
 import api from '../../Common/api';
+import { useCart } from '../../context/CartContext';
 
 function ProductItem({ product }) {
-	const [quantity, setQuantity] = useState(1);
 	const { token } = useAuth();
+	const { handleAddToCart } = useCart();
 
 	const handleAddWishlist = async () => {
 		if (!token) {
@@ -41,31 +42,7 @@ function ProductItem({ product }) {
 			}
 		}
 	};
-	const handleAddToCart = async () => {
-		if (!token) {
-			alert('Please login to add itmes in cart');
-			return;
-		}
 
-		try {
-			await api.post('/cart/add', {
-				productId: product._id,
-				qty: quantity,
-			});
-			alert(`Added ${quantity} item(s) to cart!`);
-			setQuantity(1); // Reset to default after adding
-		} catch (err) {
-			console.error('Error adding to cart:', err);
-
-			if (err.response?.status === 400) {
-				alert('Product is out of stock');
-			} else if (err.response?.status === 404) {
-				alert('Product not found');
-			} else {
-				alert('Failed to add to cart');
-			}
-		}
-	};
 	return (
 		<>
 			<li>
@@ -77,7 +54,9 @@ function ProductItem({ product }) {
 				<button className='wishlist-button' onClick={handleAddWishlist}>
 					<FaHeart />
 				</button>
-				<button className='shoppoing-cart' onClick={handleAddToCart}>
+				<button
+					className='shoppoing-cart'
+					onClick={() => handleAddToCart(product._id)}>
 					<FaShoppingCart />
 				</button>
 			</li>
