@@ -6,7 +6,7 @@ import axios from 'axios';
 import { useWishlist } from '../../context/WishlistContext';
 
 function WishListItems() {
-	const { wishlist, loading } = useWishlist();
+	const { wishlist, loading, error } = useWishlist();
 	const products = wishlist.products;
 	// ✅ Handle loading first
 	if (loading) {
@@ -15,6 +15,7 @@ function WishListItems() {
 	if (!products || products.length === 0) {
 		return <p>No items in your wishlist.</p>;
 	}
+	if (error) return <div>Error: {error}</div>;
 
 	const handleRemoveItem = async (productId) => {
 		try {
