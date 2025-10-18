@@ -2,28 +2,24 @@
 
 import React from 'react';
 import { FiTrash2 } from 'react-icons/fi';
-import { useAuth } from '../Auth/AuthContext';
-import api from '../../Common/api';
+import axios from 'axios';
+import { useWishlist } from '../../context/WishlistContext';
 
-function WishListItems({ wishlistItems, onRemoveItem }) {
-	const { token } = useAuth();
-
-	if (
-		!wishlistItems ||
-		!wishlistItems.products ||
-		wishlistItems.products.length === 0
-	) {
+function WishListItems() {
+	const { wishlist, loading } = useWishlist();
+	const products = wishlist.products;
+	// ✅ Handle loading first
+	if (loading) {
+		return <p>Loading wishlist...</p>;
+	}
+	if (!products || products.length === 0) {
 		return <p>No items in your wishlist.</p>;
 	}
 
 	const handleRemoveItem = async (productId) => {
-		if (!token) {
-			alert('Please login to add items to wishlist');
-			return;
-		}
 		try {
 			onRemoveItem(productId);
-			await api.post('/user/wishlist', {
+			await axios.post('/user/wishlist', {
 				productId,
 				action: 'remove',
 			});
@@ -39,7 +35,7 @@ function WishListItems({ wishlistItems, onRemoveItem }) {
 		<>
 			<h1>My Wishlist</h1>
 			<ul>
-				{wishlistItems.products.map((product) => (
+				{products.map((product) => (
 					<li key={product._id}>
 						<h3>{product.name}</h3>
 						<p>Price: ${product.price}</p>

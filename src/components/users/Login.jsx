@@ -1,36 +1,36 @@
 /** @format */
-
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../Auth/AuthContext';
-import api from '../../Common/api';
+import axios from 'axios';
 import './Login.css';
 
 const Login = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [error, setError] = useState('');
-	const navigate = useNavigate();
-	const { login } = useAuth();
+	const [success, setSuccess] = useState('');
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+		setError('');
+		setSuccess('');
+
 		try {
-			const response = await api.post('http://localhost:3001/api/user/login', {
+			const { data } = await axios.post('http://localhost:3001/api/user/login', {
 				email,
 				password,
 			});
 
-			// const data = await response.json();
-
-			if (response.data.status === 'success') {
-				// Store the token using AuthContext
-				login(response.data.token);
-				// Redirect to home page
+			if (data.status === 'success') {
+				setSuccess('Login successful!');
+				console.log('User data:', data);
+				// Temporary: redirect manually
 				window.location.href = '/';
+			} else {
+				setError(data.message || 'Invalid credentials');
 			}
 		} catch (err) {
-			setError('Error logging in. Please try again');
+			console.error('Login error:', err);
+			setError(err.response?.data?.message || 'Something went wrong');
 		}
 	};
 
@@ -41,11 +41,12 @@ const Login = () => {
 				<p className='login-subtitle'>Enter your details</p>
 
 				{error && <p className='error'>{error}</p>}
+				{success && <p className='success'>{success}</p>}
 
 				<form onSubmit={handleSubmit} className='login-form'>
 					<div className='form-group'>
 						<input
-							type='text'
+							type='email'
 							placeholder='Email'
 							value={email}
 							onChange={(e) => setEmail(e.target.value)}
@@ -53,9 +54,10 @@ const Login = () => {
 							className='input-field'
 						/>
 					</div>
+
 					<div className='form-group'>
 						<input
-							type='password' // Changed from 'text' to 'password'
+							type='password'
 							placeholder='Password'
 							value={password}
 							onChange={(e) => setPassword(e.target.value)}
@@ -63,12 +65,13 @@ const Login = () => {
 							className='input-field'
 						/>
 					</div>
+
 					<div className='login-section'>
 						<button type='submit' className='login-button'>
 							Login
 						</button>
 						<a className='forget-pass' href='/forget-password'>
-							Forget Password ?
+							Forgot Password?
 						</a>
 					</div>
 				</form>
@@ -78,4 +81,3 @@ const Login = () => {
 };
 
 export default Login;
- 

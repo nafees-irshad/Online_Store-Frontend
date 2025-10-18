@@ -2,22 +2,15 @@
 
 import React, { useState } from 'react';
 import { FaHeart, FaShoppingCart } from 'react-icons/fa';
-import { useAuth } from '../Auth/AuthContext';
-import api from '../../Common/api';
+import axios from 'axios';
 import { useCart } from '../../context/CartContext';
 
 function ProductItem({ product }) {
-	const { token } = useAuth();
 	const { handleAddToCart } = useCart();
 
 	const handleAddWishlist = async () => {
-		if (!token) {
-			alert('Please login to add items to wishlist');
-			return;
-		}
-
 		try {
-			const response = await api.post('/user/wishlist', {
+			const response = await axios.post('/user/wishlist', {
 				productId: product._id,
 				action: 'add',
 			});

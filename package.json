@@ -1,8 +1,20 @@
 {
   "name": "online-store",
-  "private": true,
   "version": "0.0.0",
+  "private": true,
+  "description": "<!-- @format -->",
+  "homepage": "https://github.com/nafees-irshad/Online_Store-Frontend#readme",
+  "bugs": {
+    "url": "https://github.com/nafees-irshad/Online_Store-Frontend/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nafees-irshad/Online_Store-Frontend.git"
+  },
+  "license": "ISC",
+  "author": "",
   "type": "module",
+  "main": "vite.config.js",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
